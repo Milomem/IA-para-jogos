@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
         Vector2 direction = (mousePosition - (Vector2)transform.position).normalized;
 
         // Mover o projétil na direção do mouse
-        rb.velocity = direction * speed;
+        rb.linearVelocity = direction * speed;
 
         // Destruir o projétil após um tempo de vida
         Destroy(gameObject, lifeTime);

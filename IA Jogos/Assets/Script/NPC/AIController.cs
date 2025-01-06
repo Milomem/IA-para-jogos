@@ -28,12 +28,7 @@ public class AIController : MonoBehaviour
                 new TaskNode(IsPlayerHealthLow),
                 new TaskNode(BringHealthToPlayer)
             }),
-            new Sequence(new List<Node>
-            {
-                new TaskNode(IsEnemyNear),
-                new TaskNode(RunToSafeZone)
-            }),
-            new TaskNode(FollowPlayer)
+            new TaskNode(FollowPlayerAndAvoidEnemies)
         });
 
         initialPosition = transform.position; // Armazena a posição inicial do NPC
@@ -147,7 +142,8 @@ public class AIController : MonoBehaviour
         if (nearestEnemy != null)
         {
             Vector3 directionAwayFromEnemy = (transform.position - nearestEnemy.transform.position).normalized;
-            Vector3 newTargetPosition = transform.position + directionAwayFromEnemy * moveSpeed * Time.deltaTime;
+            Vector3 fleeForce = directionAwayFromEnemy * moveSpeed;
+            Vector3 newTargetPosition = transform.position + fleeForce * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, newTargetPosition, moveSpeed * Time.deltaTime);
 
             if (Vector3.Distance(transform.position, initialPosition) > maxRunDistance)
@@ -169,11 +165,41 @@ public class AIController : MonoBehaviour
         return Node.NodeState.Failure;
     }
 
-    // Tarefa: Seguir o jogador
-    private Node.NodeState FollowPlayer()
+    // Tarefa: Seguir o jogador e desacelerar quando um inimigo se aproxima
+    private Node.NodeState FollowPlayerAndAvoidEnemies()
     {
-        Vector3 targetPosition = player.position + Vector3.left; // Adiciona um deslocamento para a esquerda
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject nearestEnemy = null;
+        float nearestDistance = Mathf.Infinity;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float distance = Vector3.Distance(player.position, enemy.transform.position);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestEnemy = enemy;
+            }
+        }
+
+        float orbitRadius = 3f; // Raio da órbita ao redor do jogador
+        float orbitSpeed = 50f; // Velocidade angular da órbita
+
+        Vector3 offset = new Vector3(Mathf.Sin(Time.time * orbitSpeed), 0, Mathf.Cos(Time.time * orbitSpeed)) * orbitRadius;
+        Vector3 targetPosition = player.position + offset;
+
+        Vector3 directionToTarget = (targetPosition - transform.position).normalized;
+        float currentSpeed = moveSpeed;
+
+        if (nearestEnemy != null && Vector3.Distance(player.position, nearestEnemy.transform.position) <= detectionRange)
+        {
+            currentSpeed = Mathf.Lerp(moveSpeed, 0, (detectionRange - Vector3.Distance(player.position, nearestEnemy.transform.position)) / detectionRange);
+        }
+
+        Vector3 seekForce = directionToTarget * currentSpeed;
+        Vector3 newTargetPosition = transform.position + seekForce * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, newTargetPosition, moveSpeed * Time.deltaTime);
+
         if (Vector3.Distance(transform.position, targetPosition) < 1f)
         {
             return Node.NodeState.Success;
