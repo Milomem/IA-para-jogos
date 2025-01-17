@@ -55,7 +55,7 @@ public class AIController : MonoBehaviour
         return Node.NodeState.Failure;
     }
 
-    // Tarefa: Levar vida para o jogador
+    // Tarefa: Pegar vida para o jogador
     private Node.NodeState BringHealthToPlayer()
     {
         GameObject[] healthPacks = GameObject.FindGameObjectsWithTag("Heal");
@@ -88,7 +88,7 @@ public class AIController : MonoBehaviour
                 if (playerHealth != null && healingItem != null)
                 {
                     playerHealth.Heal(healingItem.healAmount);
-                    Destroy(nearestHealthPack); // Destruir o item de cura após usá-lo
+                    Destroy(nearestHealthPack); 
                     return Node.NodeState.Success;
                 }
             }
