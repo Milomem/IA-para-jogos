@@ -50,7 +50,6 @@ public class FindFoodAction : Action
 
     private bool IsFoodLocation(Vector2 position)
     {
-        // Verificar se a posição tem a tag "food"
         Collider2D[] colliders = Physics2D.OverlapCircleAll(position, 0.1f);
         foreach (var collider in colliders)
         {
@@ -64,7 +63,6 @@ public class FindFoodAction : Action
 
     private List<Vector2> GetNeighbors(Vector2 position)
     {
-        // Implementar lógica para obter vizinhos em um grid 2D
         return new List<Vector2>
         {
             position + Vector2.up,

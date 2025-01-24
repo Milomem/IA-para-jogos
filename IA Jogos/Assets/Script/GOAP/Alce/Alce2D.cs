@@ -38,6 +38,7 @@ public class Alce2D : MonoBehaviour
         pathfinding = GetComponent<Pathfinding2D>();
 
         SetNextGoal();
+        Debug.Log("Current Goal: " + currentGoal.Name);
     }
 
     void Update()
@@ -45,14 +46,29 @@ public class Alce2D : MonoBehaviour
         if (currentGoal == null || currentGoal.IsSatisfied(state))
         {
             SetNextGoal();
+            Debug.Log("Current Goal: " + currentGoal.Name);
+            foreach (var condition in currentGoal.Conditions)
+            {
+                Debug.Log("Condition: " + condition.Key + " = " + condition.Value);
+            }
         }
 
         var plan = planner.Plan(state, currentGoal);
         if (plan != null && plan.Count > 0)
         {
             var action = plan[0];
+            Debug.Log("Executando ação: " + action.Name);
             action.Execute();
             state = action.Apply(state);
+            Debug.Log("Estado após executar a ação:");
+            foreach (var kvp in state)
+            {
+                Debug.Log(kvp.Key + ": " + kvp.Value);
+            }
+        }
+        else
+        {
+            Debug.LogError("Alce2D: Nenhum plano encontrado para o objetivo atual.");
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class Action
 {
@@ -6,7 +7,7 @@ public abstract class Action
     public Dictionary<string, bool> Preconditions { get; private set; }
     public Dictionary<string, bool> Effects { get; private set; }
 
-    public Action(string name, Dictionary<string, bool> preconditions, Dictionary<string, bool> effects)
+    protected Action(string name, Dictionary<string, bool> preconditions, Dictionary<string, bool> effects)
     {
         Name = name;
         Preconditions = preconditions;
