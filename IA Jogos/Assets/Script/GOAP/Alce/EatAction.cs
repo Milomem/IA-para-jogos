@@ -14,7 +14,6 @@ public class EatAction : Action
     {
         // Implementar lógica para comer
         Debug.Log("Comendo...");
-        // Aqui você pode adicionar a lógica para consumir a comida e satisfazer a fome
         alce.state["Hungry"] = false;
         alce.state["HasFood"] = false;
     }

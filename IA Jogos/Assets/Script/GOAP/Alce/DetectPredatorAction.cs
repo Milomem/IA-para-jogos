@@ -14,7 +14,6 @@ public class DetectPredatorAction : Action
     {
         // Implementar lógica para detectar predadores
         Debug.Log("Detectando predadores...");
-        // Aqui você pode adicionar a lógica para detectar predadores nas proximidades
         Collider2D[] colliders = Physics2D.OverlapCircleAll(alce.transform.position, 5.0f); // Raio de detecção de 5 unidades
         foreach (var collider in colliders)
         {

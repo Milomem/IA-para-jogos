@@ -14,7 +14,6 @@ public class RestAction : Action
     {
         // Implementar lógica para descansar
         Debug.Log("Descansando...");
-        // Aqui você pode adicionar a lógica para descansar e recuperar energia
         alce.state["Tired"] = false;
         alce.state["HasShelter"] = false;
     }

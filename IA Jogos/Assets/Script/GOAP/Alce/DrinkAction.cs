@@ -12,9 +12,7 @@ public class DrinkAction : Action
 
     public override void Execute()
     {
-        // Implementar lógica para beber
         Debug.Log("Bebendo...");
-        // Aqui você pode adicionar a lógica para consumir a água e satisfazer a sede
         alce.state["Thirsty"] = false;
         alce.state["HasWater"] = false;
     }

@@ -25,8 +25,14 @@ public class FleeAction : Action
 
     private Vector2 FindSafeLocation()
     {
-        // Implementar lógica para encontrar uma localização segura
-        // Exemplo: retornar uma posição fixa para simplificação
-        return new Vector2(-5, -5);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(position, 0.1f);
+        foreach (var collider in colliders)
+        {
+            if (collider.CompareTag("shelter"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
